@@ -14,7 +14,6 @@
 
 import os
 import sys
-import glob
 import winreg
 import shutil
 import vdf
@@ -62,11 +61,15 @@ def get_game_install_path(app_id):
 game_path = get_game_install_path("1272080")
 overrides_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "overrides")
 additions_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "additions")
+mods_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "~mods")
 
 
 def add_overrides():
     for root, dirs, files in os.walk(overrides_path):
         for file in files:
+            if file == ".gitkeep":
+                continue
+
             src_file = os.path.join(root, file)
             dst_file = src_file.replace(overrides_path, game_path)
 
@@ -75,16 +78,26 @@ def add_overrides():
 
             # Backup the original file
             if os.path.exists(dst_file):
-                os.rename(dst_file, dst_file + ".bak")
+                if not os.path.exists(dst_file + ".bak"):
+                    os.rename(dst_file, dst_file + ".bak")
 
-            shutil.copyfile(src_file, dst_file)
+            if not os.path.exists(dst_file):
+                os.symlink(src_file, dst_file)
 
 
 def remove_overrides():
     for root, dirs, files in os.walk(overrides_path):
         for file in files:
+            if file == ".gitkeep":
+                continue
+
             src_file = os.path.join(root, file)
             dst_file = src_file.replace(overrides_path, game_path)
+
+            # If no .bak file exists, then continue
+            if not os.path.exists(dst_file + ".bak"):
+                print("No backup file found for " + dst_file)
+                continue
 
             # Remove the override file
             if os.path.exists(dst_file):
@@ -107,7 +120,8 @@ def add_additions():
             if not os.path.exists(os.path.dirname(dst_file)):
                 os.makedirs(os.path.dirname(dst_file))
 
-            shutil.copyfile(src_file, dst_file)
+            if not os.path.exists(dst_file):
+                os.symlink(src_file, dst_file)
 
 
 def remove_additions():
@@ -145,43 +159,90 @@ def remove_additions():
                         os.rmdir(parent_folder)
 
 
+def add_mods():
+    for root, dirs, files in os.walk(mods_path):
+        for file in files:
+            if file == ".gitkeep":
+                continue
+
+            src_file = os.path.join(root, file)
+            dst_file = src_file.replace(
+                mods_path, game_path + "\\PAYDAY3\\Content\\Paks\\~mods"
+            )
+
+            if not os.path.exists(os.path.dirname(dst_file)):
+                os.makedirs(os.path.dirname(dst_file))
+
+            if not os.path.exists(dst_file):
+                os.symlink(src_file, dst_file)
+
+
+def remove_mods():
+    # Remove the symlink
+    for root, dirs, files in os.walk(mods_path):
+        for file in files:
+            if file == ".gitkeep":
+                continue
+
+            src_file = os.path.join(root, file)
+            dst_file = src_file.replace(
+                mods_path, game_path + "\\PAYDAY3\\Content\\Paks\\~mods"
+            )
+
+            if os.path.exists(dst_file):
+                os.remove(dst_file)
+
+
 def main():
-    print("Finding PAYDAY 3 install path...")
+    print("\033[1m===| PAYDAY 3 Mod Manager |===\033[0m")
+    print("If you want to force the script to install the mods, use --force")
+    print("Example: python toggle_mods.py --force")
+    print("")
+    # If windows, check if the script is running as admin
+    if os.name == "nt":
+        import ctypes
+
+        if not ctypes.windll.shell32.IsUserAnAdmin():
+            # Print red text to the console
+            print("\033[91mThis script must be run as administrator\033[0m")
+
+            sys.exit(1)
 
     game_path = get_game_install_path("1272080")
     mod_dir = os.path.join(game_path, "PAYDAY3", "Content", "Paks", "~mods")
 
-    print("Found PAYDAY 3 install path: " + game_path)
-
-    # If the directory doesn't exist, exit
-    if not os.path.isdir(mod_dir):
-        print("Directory does not exist")
-        sys.exit(1)
-
     loaded_mods = 0
+    force = False
 
-    for mod in glob.glob(os.path.join(mod_dir, "*")):
-        mod_name = os.path.basename(mod)
+    # If the directory doesn't exist, create it
+    if not os.path.isdir(mod_dir):
+        os.makedirs(mod_dir)
+        force = True
 
-        if mod_name.endswith(".pak"):
-            new_name = mod_name.replace(".pak", ".pak.disabled")
-        else:
+    print("Checking for loaded mods...")
+
+    # Count the number of mods loaded, they will be symlinked to the ~mods folder
+    for root, dirs, files in os.walk(mod_dir):
+        for file in files:
             loaded_mods += 1
-            new_name = mod_name.replace(".pak.disabled", ".pak")
 
-        # Rename the mod
-        os.rename(mod, os.path.join(mod_dir, new_name))
-
-    # If no mods, also disable UE4SS
-    if loaded_mods == 0:
-        # remove_overrides()
-        remove_additions()
-    else:
-        # add_overrides()
-        add_additions()
-
+    print("Loaded mods: " + str(loaded_mods))
     print("")
-    print("Mods toggled")
+
+    # If --force then loaded_mods = 1 to force the script to install the mods
+    if "--force" in sys.argv:
+        force = True
+
+    if loaded_mods > 0 and not force:
+        print("Mods are currently loaded, removing...")
+        remove_overrides()
+        remove_additions()
+        remove_mods()
+    else:
+        print("Mods are currently not loaded or --force was supplied, adding...")
+        add_overrides()
+        add_additions()
+        add_mods()
 
 
 main()
