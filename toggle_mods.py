@@ -165,6 +165,9 @@ def add_mods():
             if file == ".gitkeep":
                 continue
 
+            if file.endswith(".skip"):
+                continue
+
             src_file = os.path.join(root, file)
             dst_file = src_file.replace(
                 mods_path, game_path + "\\PAYDAY3\\Content\\Paks\\~mods"
