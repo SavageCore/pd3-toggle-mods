@@ -196,6 +196,24 @@ def remove_mods():
                 os.remove(dst_file)
 
 
+# For each file in the game's ~mods folder
+# Check if there is a matching file in the script's ~mods folder
+# If there is not then delete the file in the game's ~mods folder
+def cleanup_mods():
+    for root, dirs, files in os.walk(game_path + "\\PAYDAY3\\Content\\Paks\\~mods"):
+        for file in files:
+            if file == ".gitkeep":
+                continue
+
+            src_file = os.path.join(root, file)
+            dst_file = src_file.replace(
+                game_path + "\\PAYDAY3\\Content\\Paks\\~mods", mods_path
+            )
+
+            if not os.path.exists(dst_file):
+                os.remove(src_file)
+
+
 def main():
     print("\033[1m===| PAYDAY 3 Mod Manager |===\033[0m")
     print("If you want to force the script to install the mods, use --force")
@@ -246,6 +264,8 @@ def main():
         add_overrides()
         add_additions()
         add_mods()
+
+    cleanup_mods()
 
 
 main()
