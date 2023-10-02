@@ -1,3 +1,7 @@
 additions/
 overrides/
 ~mods/
+
+# pyinstaller
+dist/
+build/
