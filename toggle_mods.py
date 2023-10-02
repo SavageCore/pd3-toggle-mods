@@ -15,7 +15,6 @@
 import os
 import sys
 import winreg
-import shutil
 import vdf
 
 
