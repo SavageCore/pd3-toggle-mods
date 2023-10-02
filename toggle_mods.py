@@ -225,6 +225,8 @@ def main():
         if not ctypes.windll.shell32.IsUserAnAdmin():
             # Print red text to the console
             print("\033[91mThis script must be run as administrator\033[0m")
+            print("")
+            input("Press enter to continue...")
 
             sys.exit(1)
 
@@ -265,6 +267,10 @@ def main():
         add_mods()
 
     cleanup_mods()
+
+    print("")
+    input("Press enter to continue...")
+    sys.exit(0)
 
 
 main()
