@@ -255,6 +255,25 @@ def main():
     if "--force" in sys.argv:
         force = True
 
+    mods_available = 0
+
+    for root, dirs, files in os.walk(mods_path):
+        for file in files:
+            if file == ".gitkeep":
+                continue
+
+            if file.endswith(".skip"):
+                continue
+
+            mods_available += 1
+
+    print("Mods in ~mods: " + str(mods_available))
+    print("")
+
+    # If more mods_available than loaded_mods then force the script to install the mods
+    if mods_available > loaded_mods:
+        force = True
+
     if loaded_mods > 0 and not force:
         print("Mods are currently loaded, removing...")
         remove_overrides()
