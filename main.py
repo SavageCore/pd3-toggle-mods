@@ -104,6 +104,10 @@ def remove_overrides():
             if os.path.exists(dst_file):
                 os.remove(dst_file)
 
+            ue4ss_log = os.path.join(game_path, "PAYDAY3/Binaries/Win64/UE4SS.log")
+            if os.path.exists(ue4ss_log):
+                os.remove(ue4ss_log)
+
             # Restore the original file
             if not os.path.exists(dst_file + ".bak"):
                 os.rename(dst_file + ".bak", dst_file)
