@@ -40,6 +40,10 @@ You may run the script with the `--debug` flag to see some extra information.
 1. Run `pip install -r requirements.txt` in the project directory.
 1. Run `pyinstaller --noconfirm --onefile --console --uac-admin --name=pd3-toggle-mods main.py` in the project directory.
 
+# Publishing
+
+1. Push a new tag to the repo. This will trigger a GitHub Action which will build the script and upload it as an asset to the release.
+
 ## Notes
 
 - The script will automatically detect the game folder.
