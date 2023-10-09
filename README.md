@@ -30,6 +30,10 @@ overrides
                 StartUp_DeepSilver.bk2
 ```
 
+### Debugging
+
+You may run the script with the `--debug` flag to see some extra information.
+
 # Building
 
 1. Install [Python 3](https://www.python.org/downloads/).

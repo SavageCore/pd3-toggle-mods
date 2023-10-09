@@ -64,10 +64,11 @@ overrides_path = os.path.join(cwd, "overrides")
 additions_path = os.path.join(cwd, "additions")
 mods_path = os.path.join(cwd, "~mods")
 
-print("Game path: " + game_path)
-print("Overrides path: " + overrides_path)
-print("Additions path: " + additions_path)
-print("Mods path: " + mods_path)
+if "--debug" in sys.argv:
+    print("Game path: " + game_path)
+    print("Overrides path: " + overrides_path)
+    print("Additions path: " + additions_path)
+    print("Mods path: " + mods_path)
 
 
 def add_overrides():
