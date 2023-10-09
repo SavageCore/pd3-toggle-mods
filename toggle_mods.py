@@ -241,30 +241,30 @@ def main():
     game_path = get_game_install_path("1272080")
     mod_dir = os.path.join(game_path, "PAYDAY3", "Content", "Paks", "~mods")
 
-    loaded_mods = 0
+    installed_mods = 0
+    mods_available = 0
     force = False
 
-    # If the directory doesn't exist, create it
+    # If the game's mod directory doesn't exist, create it
     if not os.path.isdir(mod_dir):
         os.makedirs(mod_dir)
         force = True
 
-    print("Checking for loaded mods...")
+    print("Checking for installed mods...")
 
-    # Count the number of mods loaded, they will be symlinked to the ~mods folder
+    # Count the number mods installed
     for root, dirs, files in os.walk(mod_dir):
         for file in files:
-            loaded_mods += 1
+            installed_mods += 1
 
-    print("Loaded mods: " + str(loaded_mods))
     print("")
+    print("Installed mods: " + str(installed_mods))
 
-    # If --force then loaded_mods = 1 to force the script to install the mods
+    # If --force is supplied then force the script to install the mods
     if "--force" in sys.argv:
         force = True
 
-    mods_available = 0
-
+    # Count the number of mods available
     for root, dirs, files in os.walk(mods_path):
         for file in files:
             if file == ".gitkeep":
@@ -275,20 +275,20 @@ def main():
 
             mods_available += 1
 
-    print("Mods in ~mods: " + str(mods_available))
+    print("Available mods: " + str(mods_available))
     print("")
 
-    # If more mods_available than loaded_mods then force the script to install the mods
-    if mods_available > loaded_mods:
+    # If more mods_available than installed_mods then force the script to install the mods
+    if mods_available > installed_mods:
         force = True
 
-    if loaded_mods > 0 and not force:
-        print("Mods are currently loaded, removing...")
+    if installed_mods > 0 and not force:
+        print("\033[93mMods are currently loaded, removing...\033[0m")
         remove_overrides()
         remove_additions()
         remove_mods()
     else:
-        print("Mods are currently not loaded or --force was supplied, adding...")
+        print("\033[92mMods are currently not loaded or --force was supplied, installing...\033[0m")
         add_overrides()
         add_additions()
         add_mods()
