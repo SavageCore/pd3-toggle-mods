@@ -19,7 +19,11 @@ jobs:
 
       - name: Create Archive 📦
         run: |
-          7z a dist/pd3-toggle-mods.zip dist/pd3-toggle-mods.exe "~mods" "additions" "overrides"
+          cd dist
+          mkdir "additions"
+          mkdir "overrides"
+          mkdir "~mods"
+          7z a pd3-toggle-mods.zip pd3-toggle-mods.exe "~mods" "additions" "overrides"
 
       - name: Release 🚀
         uses: softprops/action-gh-release@v1
