@@ -204,10 +204,19 @@ def cleanup_mods():
                 os.remove(src_file)
 
 
+def print_installed_mods(mod_dir):
+    installed_mods = 0
+    # Count the number mods installed
+    for root, dirs, files in os.walk(mod_dir):
+        for file in files:
+            installed_mods += 1
+
+    print("")
+    print("Installed mods: " + str(installed_mods))
+
+    return installed_mods
 def main():
-    print("\033[1m===| PAYDAY 3 Mod Manager |===\033[0m")
-    print("If you want to force the script to install the mods, use --force")
-    print("Example: python toggle_mods.py --force")
+    print("\033[1m===| pd3-toggle-mods |===\033[0m")
     print("")
     # If windows, check if the script is running as admin
     if os.name == "nt":
@@ -224,7 +233,6 @@ def main():
     game_path = get_game_install_path("1272080")
     mod_dir = os.path.join(game_path, "PAYDAY3", "Content", "Paks", "~mods")
 
-    installed_mods = 0
     mods_available = 0
     force = False
 
@@ -235,13 +243,7 @@ def main():
 
     print("Checking for installed mods...")
 
-    # Count the number mods installed
-    for root, dirs, files in os.walk(mod_dir):
-        for file in files:
-            installed_mods += 1
-
-    print("")
-    print("Installed mods: " + str(installed_mods))
+    installed_mods = print_installed_mods(mod_dir)
 
     # If --force is supplied then force the script to install the mods
     if "--force" in sys.argv:
@@ -263,15 +265,16 @@ def main():
         force = True
 
     if installed_mods > 0 and not force:
-        print("\033[93mMods are currently loaded, removing...\033[0m")
+        print("\033[93mMods are currently installed, removing...\033[0m")
         remove_overrides()
         remove_additions()
         remove_mods()
     else:
-        print("\033[92mMods are currently not loaded or --force was supplied, installing...\033[0m")
+        print("\033[92mMods are currently not installed or --force was supplied, installing...\033[0m")
         add_overrides()
         add_additions()
         add_mods()
+        print_installed_mods(mod_dir)
 
     cleanup_mods()
 
