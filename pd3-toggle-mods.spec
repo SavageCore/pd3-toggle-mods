@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['toggle_mods.py'],
+    ['main.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -21,7 +21,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='ToggleMods',
+    name='pd3-toggle-mods',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

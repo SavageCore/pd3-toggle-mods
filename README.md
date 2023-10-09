@@ -38,7 +38,7 @@ You may run the script with the `--debug` flag to see some extra information.
 
 1. Install [Python 3](https://www.python.org/downloads/).
 1. Run `pip install -r requirements.txt` in the project directory.
-1. Run `pyinstaller --noconfirm --onefile --console --uac-admin --name=ToggleMods toggle_mods.py` in the project directory.
+1. Run `pyinstaller --noconfirm --onefile --console --uac-admin --name=pd3-toggle-mods main.py` in the project directory.
 
 ## Notes
 
