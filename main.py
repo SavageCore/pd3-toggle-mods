@@ -74,9 +74,6 @@ if "--debug" in sys.argv:
 def add_overrides():
     for root, dirs, files in os.walk(overrides_path):
         for file in files:
-            if file == ".gitkeep":
-                continue
-
             src_file = os.path.join(root, file)
             dst_file = src_file.replace(overrides_path, game_path)
 
@@ -95,9 +92,6 @@ def add_overrides():
 def remove_overrides():
     for root, dirs, files in os.walk(overrides_path):
         for file in files:
-            if file == ".gitkeep":
-                continue
-
             src_file = os.path.join(root, file)
             dst_file = src_file.replace(overrides_path, game_path)
 
@@ -118,9 +112,6 @@ def remove_overrides():
 def add_additions():
     for root, dirs, files in os.walk(additions_path):
         for file in files:
-            if file == ".gitkeep":
-                continue
-
             src_file = os.path.join(root, file)
             dst_file = src_file.replace(additions_path, game_path)
 
@@ -136,9 +127,6 @@ def remove_additions():
 
     for root, dirs, files in os.walk(additions_path):
         for file in files:
-            if file == ".gitkeep":
-                continue
-
             src_file = os.path.join(root, file)
             dst_file = src_file.replace(additions_path, game_path)
 
@@ -169,9 +157,6 @@ def remove_additions():
 def add_mods():
     for root, dirs, files in os.walk(mods_path):
         for file in files:
-            if file == ".gitkeep":
-                continue
-
             if file.endswith(".skip"):
                 continue
 
@@ -191,9 +176,6 @@ def remove_mods():
     # Remove the symlink
     for root, dirs, files in os.walk(mods_path):
         for file in files:
-            if file == ".gitkeep":
-                continue
-
             src_file = os.path.join(root, file)
             dst_file = src_file.replace(
                 mods_path, game_path + "\\PAYDAY3\\Content\\Paks\\~mods"
@@ -209,9 +191,6 @@ def remove_mods():
 def cleanup_mods():
     for root, dirs, files in os.walk(game_path + "\\PAYDAY3\\Content\\Paks\\~mods"):
         for file in files:
-            if file == ".gitkeep":
-                continue
-
             src_file = os.path.join(root, file)
             dst_file = src_file.replace(
                 game_path + "\\PAYDAY3\\Content\\Paks\\~mods", mods_path
@@ -267,9 +246,6 @@ def main():
     # Count the number of mods available
     for root, dirs, files in os.walk(mods_path):
         for file in files:
-            if file == ".gitkeep":
-                continue
-
             if file.endswith(".skip"):
                 continue
 
