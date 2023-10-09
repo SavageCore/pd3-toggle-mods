@@ -10,6 +10,26 @@ This script is used to toggle mods on and off for the game [Payday 3](https://st
 1. You guessed it! Overrides go in the `overrides` folder. These are files which get backed up and replaced when toggling mods. Such as intro videos.
 1. Run the exe as Admin.
 
+### Example Folder Structure
+
+```
+ToggleMods.exe
+~mods
+    mod1.pak
+    mod2.pak
+    mod3.pak.skip
+additions
+    PAYDAY3
+        Binaries
+            Win64
+                ue4ss.dll
+overrides
+    PAYDAY3
+        Content
+            Movies
+                StartUp_DeepSilver.bk2
+```
+
 # Building
 
 1. Install [Python 3](https://www.python.org/downloads/).
@@ -19,4 +39,5 @@ This script is used to toggle mods on and off for the game [Payday 3](https://st
 ## Notes
 
 - The script will automatically detect the game folder.
-- You may run with the `--force` flag to force installation.
+- You may run with the `--force` flag to force installation rather than toggling.
+- If there are more mods in the `~mods` folder than currently installed, the script will also `--force` install.
