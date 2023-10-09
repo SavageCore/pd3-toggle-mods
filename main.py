@@ -105,7 +105,7 @@ def remove_overrides():
                 os.remove(dst_file)
 
             # Restore the original file
-            if os.path.exists(dst_file + ".bak"):
+            if not os.path.exists(dst_file + ".bak"):
                 os.rename(dst_file + ".bak", dst_file)
 
 
