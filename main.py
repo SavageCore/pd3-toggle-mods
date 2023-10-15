@@ -262,9 +262,11 @@ def main():
     print("Available mods: " + str(mods_available))
     print("")
 
-    # If more mods_available than installed_mods then
+    # If mods_available not equal to installed_mods then
     # force the script to install the mods
-    if mods_available > installed_mods:
+    # This should catch mods being added or removed
+    if mods_available != installed_mods:
+        print("\033[93mMods have changed, forcing install...\033[0m")
         force = True
 
     if installed_mods > 0 and not force:
