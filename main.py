@@ -215,6 +215,8 @@ def print_installed_mods(mod_dir):
     print("Installed mods: " + str(installed_mods))
 
     return installed_mods
+
+
 def main():
     print("\033[1m===| pd3-toggle-mods |===\033[0m")
     print("")
@@ -260,7 +262,8 @@ def main():
     print("Available mods: " + str(mods_available))
     print("")
 
-    # If more mods_available than installed_mods then force the script to install the mods
+    # If more mods_available than installed_mods then
+    # force the script to install the mods
     if mods_available > installed_mods:
         force = True
 
@@ -270,7 +273,9 @@ def main():
         remove_additions()
         remove_mods()
     else:
-        print("\033[92mMods are currently not installed or --force was supplied, installing...\033[0m")
+        print(
+            "\033[92mMods are currently not installed or --force was supplied, installing...\033[0m"
+        )
         add_overrides()
         add_additions()
         add_mods()
