@@ -18,43 +18,36 @@ import winreg
 import vdf
 
 
-def get_steam_install_path():
-    # Open the Steam registry key
-    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Valve\\Steam")
-
-    # Read the Steam installation path value
-    install_path, _ = winreg.QueryValueEx(key, "SteamPath")
-
-    # Close the registry key
-    winreg.CloseKey(key)
-
-    return install_path
-
-
 def get_game_install_path(app_id):
-    # Get the Steam installation path
-    steam_path = get_steam_install_path()
+    # Return the install path of the game
 
-    # Open steamapps/appmanifest_1272080.acf to read the "installdir" value
-    acf_path = os.path.join(steam_path, "steamapps", "appmanifest_" + app_id + ".acf")
-    acf_file = vdf.parse(open(acf_path))
+    # First check Steam
+    steam_key = winreg.OpenKey(
+        winreg.HKEY_LOCAL_MACHINE,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App " + app_id,
+    )
 
-    game_name = acf_file["AppState"]["installdir"]
+    install_location = winreg.QueryValueEx(steam_key, "InstallLocation")[0]
 
-    # Open steamapps/libraryfolders.vdf to read the library folders
-    library_folders_path = os.path.join(steam_path, "steamapps", "libraryfolders.vdf")
-    library_folders_file = vdf.parse(open(library_folders_path))
+    winreg.CloseKey(steam_key)
 
-    # For each library folder search for the app_id, if found construct the path
-    # and return it
-    lf_count = library_folders_file["libraryfolders"].__len__()
+    if install_location:
+        return install_location
 
-    for i in range(0, lf_count):
-        if library_folders_file["libraryfolders"][str(i)]["apps"].get(app_id):
-            path = library_folders_file["libraryfolders"][str(i)]["path"]
+    # If not installed in Steam, check the Epic Games Store
+    epic_manifests_path = os.path.join(
+        os.getenv("ProgramData"), "Epic", "EpicGamesLauncher", "Data", "Manifests"
+    )
 
-            game_path = os.path.join(path, "steamapps", "common", game_name)
-            return game_path
+    for root, dirs, files in os.walk(epic_manifests_path):
+        for file in files:
+            with open(os.path.join(root, file), "r") as f:
+                manifest = vdf.load(f)
+
+                if manifest["DisplayName"] == "PAYDAY 3":
+                    return manifest["InstallLocation"]
+
+    return None
 
 
 cwd = os.getcwd()
