@@ -1,2 +1,2 @@
 vdf==3.4
-pyinstaller==6.5.0
+pyinstaller==6.6.0
