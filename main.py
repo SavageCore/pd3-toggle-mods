@@ -7,9 +7,10 @@
 # Author: Oliver Sayers <https://github.com/SavageCore>
 # License: MIT
 #
-# Version: 0.0.0
+# Version: 0.1.0
 #
 # Changelog:
+# 0.1.0 - Initial release
 
 import os
 import sys
