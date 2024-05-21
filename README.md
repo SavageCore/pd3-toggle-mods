@@ -2,7 +2,7 @@
 
 # pd3-toggle-mods
 
-> This script is used to toggle mods on and off for the game [Payday 3](https://store.steampowered.com/app/1194630/PAYDAY_3/).
+> This script is used to toggle mods on and off for the game [Payday 3](https://store.steampowered.com/app/1272080/PAYDAY_3/).
 
 ## Usage
 
