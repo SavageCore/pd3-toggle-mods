@@ -15,6 +15,7 @@
 import os
 import sys
 import winreg
+import json
 import vdf  # type: ignore
 
 
@@ -75,6 +76,20 @@ def get_game_install_path(app_id):
             install_path = _check_app_manifest(library_path, app_id)
             if install_path:
                 return install_path
+
+    # If not installed in Steam, check the Epic Games Store
+    epic_manifests_path = os.path.join(
+        os.getenv("ProgramData"), "Epic", "EpicGamesLauncher", "Data", "Manifests"
+    )
+
+    # TODO: Determine the correct manifest file for PAYDAY 3
+    for root, _, files in os.walk(epic_manifests_path):
+        for file in files:
+            with open(os.path.join(root, file), "r") as f:
+                manifest = json.load(f)
+
+                if manifest["DisplayName"] == "PAYDAY 3":
+                    return manifest["InstallLocation"]
 
     return None
 
